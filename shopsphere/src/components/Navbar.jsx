@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, User, Search } from "lucide-react";
+import { ShoppingBag, ShoppingCart, Heart, User, Search } from "lucide-react";
 
 function Navbar() {
   return (
@@ -7,10 +7,14 @@ function Navbar() {
 
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-blue-600">
-          ShopSphere<span className="text-gray-900">.</span>
-        </Link>
+        {/* ShopSphere Logo */}
+<Link to="/" className="flex items-center shrink-0">
+  <img
+    src="/shopsphere-logo.png"
+    alt="ShopSphere Logo"
+    className="w-23 md:w-40 h-15 object-contain"
+  />
+</Link>
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 font-medium text-gray-700">
