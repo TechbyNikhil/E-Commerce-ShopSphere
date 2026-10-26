@@ -1,23 +1,23 @@
-import { Link } from "react-router-dom";
-import { ShoppingBag, ShoppingCart, Heart, User, Search } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
+import { ShoppingCart, Heart, User, Search } from "lucide-react";
 
 function Navbar() {
-  const { cartItems } = useCart();
+  // Get cart count from CartContext
+  const { cartCount } = useCart();
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
-
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
         {/* ShopSphere Logo */}
-<Link to="/" className="flex items-center shrink-0">
-  <img
-    src="/shopsphere-logo.png"
-    alt="ShopSphere Logo"
-    className="w-23 md:w-40 h-15 object-contain"
-  />
-</Link>
+        <Link to="/" className="flex items-center shrink-0">
+          <img
+            src="/shopsphere-logo.png"
+            alt="ShopSphere Logo"
+            className="w-23 md:w-40 h-15 object-contain"
+          />
+        </Link>
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 font-medium text-gray-700">
@@ -48,6 +48,7 @@ function Navbar() {
         {/* Icons */}
         <div className="flex items-center gap-5">
 
+          {/* Wishlist */}
           <Link to="/wishlist" aria-label="Wishlist">
             <Heart
               size={23}
@@ -55,23 +56,25 @@ function Navbar() {
             />
           </Link>
 
+          {/* Shopping Cart */}
           <Link
-  to="/cart"
-  aria-label={`Shopping cart with ${cartCount} items`}
-  className="relative"
->
-  <ShoppingCart
-    size={23}
-    className="hover:text-blue-600 transition"
-  />
+            to="/cart"
+            aria-label={`Shopping cart with ${cartCount} items`}
+            className="relative"
+          >
+            <ShoppingCart
+              size={23}
+              className="hover:text-blue-600 transition"
+            />
 
-  {cartCount > 0 && (
-    <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-xs font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
-      {cartCount}
-    </span>
-  )}
-</Link>
+            {cartCount > 0 && (
+              <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-xs font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
 
+          {/* Login */}
           <Link to="/login" aria-label="Login">
             <User
               size={23}
@@ -80,9 +83,7 @@ function Navbar() {
           </Link>
 
         </div>
-
       </div>
-
     </header>
   );
 }
