@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { ShoppingBag, ShoppingCart, Heart, User, Search } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
+  const { cartItems } = useCart();
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
 
@@ -52,12 +55,22 @@ function Navbar() {
             />
           </Link>
 
-          <Link to="/cart" aria-label="Shopping cart">
-            <ShoppingCart
-              size={23}
-              className="hover:text-blue-600 cursor-pointer"
-            />
-          </Link>
+          <Link
+  to="/cart"
+  aria-label={`Shopping cart with ${cartCount} items`}
+  className="relative"
+>
+  <ShoppingCart
+    size={23}
+    className="hover:text-blue-600 transition"
+  />
+
+  {cartCount > 0 && (
+    <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-xs font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
+      {cartCount}
+    </span>
+  )}
+</Link>
 
           <Link to="/login" aria-label="Login">
             <User

@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Products from "./pages/Products";
+import Cart from "./pages/Cart";
 
 function Placeholder({ title }) {
   return (
@@ -21,20 +23,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
 
-        <Route
-          path="/products"
-          element={<Placeholder title="Products" />}
-        />
+        <Route path="/products" element={<Products />} />
 
         <Route
           path="/categories"
           element={<Placeholder title="Categories" />}
         />
 
-        <Route
-          path="/cart"
-          element={<Placeholder title="Cart" />}
-        />
+        <Route path="/cart" element={<Cart />} />
 
         <Route
           path="/wishlist"
