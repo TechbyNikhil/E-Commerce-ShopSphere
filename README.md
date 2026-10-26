@@ -1,5 +1,2 @@
 # E-Commerce-ShopSphere
 .
-..
-..
-..
