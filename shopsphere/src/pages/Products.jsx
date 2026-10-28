@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+
 import { products } from "../data/products";
 import ProductCard from "../components/ProductCard";
 
@@ -15,23 +16,47 @@ const categories = [
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedCategory = searchParams.get("category") || "all";
+  // Get category from URL
+  const selectedCategory =
+    searchParams.get("category") || "all";
 
-  const filteredProducts =
-    selectedCategory === "all"
-      ? products
-      : products.filter(
-          (product) => product.category === selectedCategory
-        );
+  // Get search term from URL
+  const searchQuery =
+    searchParams.get("search")?.trim().toLowerCase() || "";
 
+  // Filter products by category and search
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      product.category === selectedCategory;
+
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery) ||
+      product.category.toLowerCase().includes(searchQuery);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  // Change category without losing search
   function handleCategoryChange(event) {
     const category = event.target.value;
 
-    if (category === "all") {
-      setSearchParams({});
-    } else {
-      setSearchParams({ category });
-    }
+    setSearchParams((previousParams) => {
+      const updatedParams = new URLSearchParams(previousParams);
+
+      if (category === "all") {
+        updatedParams.delete("category");
+      } else {
+        updatedParams.set("category", category);
+      }
+
+      return updatedParams;
+    });
+  }
+
+  // Clear all filters
+  function clearFilters() {
+    setSearchParams({});
   }
 
   return (
@@ -47,7 +72,9 @@ function Products() {
           </p>
 
           <h1 className="text-4xl font-bold text-gray-900 mt-3">
-            Explore Our Products
+            {searchQuery
+              ? `Search Results for "${searchQuery}"`
+              : "Explore Our Products"}
           </h1>
 
           <p className="text-gray-500 mt-3">
@@ -56,13 +83,29 @@ function Products() {
 
         </div>
 
-        {/* Category Filter */}
+        {/* Filter Bar */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-10">
 
-          <p className="text-gray-600">
-            Showing {filteredProducts.length} products
-          </p>
+          <div>
+            <p className="text-gray-600">
+              Showing {filteredProducts.length}{" "}
+              {filteredProducts.length === 1
+                ? "product"
+                : "products"}
+            </p>
 
+            {(searchQuery || selectedCategory !== "all") && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="text-blue-600 text-sm font-medium mt-2 hover:underline"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+
+          {/* Category Filter */}
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
@@ -80,7 +123,7 @@ function Products() {
 
         </div>
 
-        {/* Products Grid */}
+        {/* Product Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
 
@@ -93,8 +136,26 @@ function Products() {
 
           </div>
         ) : (
-          <div className="text-center py-20 text-gray-500">
-            No products found in this category.
+
+          /* No Results */
+          <div className="bg-white rounded-2xl p-16 text-center shadow-sm">
+
+            <h2 className="text-2xl font-semibold text-gray-800">
+              No products found 🔍
+            </h2>
+
+            <p className="text-gray-500 mt-3">
+              Try searching for another product or category.
+            </p>
+
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="mt-6 bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
+            >
+              View All Products
+            </button>
+
           </div>
         )}
 
