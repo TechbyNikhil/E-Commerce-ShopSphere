@@ -1,8 +1,10 @@
+import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, User, Search } from "lucide-react";
 
 function Navbar() {
+  const { wishlistCount } = useWishlist();
   // Get cart count from CartContext
   const { cartCount } = useCart();
 
@@ -49,12 +51,22 @@ function Navbar() {
         <div className="flex items-center gap-5">
 
           {/* Wishlist */}
-          <Link to="/wishlist" aria-label="Wishlist">
-            <Heart
-              size={23}
-              className="hover:text-blue-600 cursor-pointer"
-            />
-          </Link>
+          <Link
+  to="/wishlist"
+  aria-label={`Wishlist with ${wishlistCount} products`}
+  className="relative"
+>
+  <Heart
+    size={23}
+    className="hover:text-red-500 transition"
+  />
+
+  {wishlistCount > 0 && (
+    <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
+      {wishlistCount}
+    </span>
+  )}
+</Link>
 
           {/* Shopping Cart */}
           <Link
