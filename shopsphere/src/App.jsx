@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
+import ProductDetails from "./pages/ProductDetails";
 
 function Placeholder({ title }) {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
 
         <Route
           path="/categories"

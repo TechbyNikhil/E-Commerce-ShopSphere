@@ -30,7 +30,7 @@ function SearchBar({ value, onSearch, mobile = false }) {
 
       {/* Search Input */}
       <input
-        type="search"
+        type="text"
         value={value}
         onChange={(event) => onSearch(event.target.value)}
         placeholder="Search products..."

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 
@@ -42,11 +43,16 @@ function ProductCard({ product }) {
 
       {/* Product Image */}
       <div className="relative bg-gray-50 h-64 overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-        />
+        <Link
+  to={`/products/${product.id}`}
+  className="block w-full h-full"
+>
+  <img
+    src={product.image}
+    alt={product.name}
+    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+  />
+</Link>
 
         {/* Discount Badge */}
         <span className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
@@ -85,9 +91,11 @@ function ProductCard({ product }) {
         </p>
 
         {/* Product Name */}
-        <h3 className="text-lg font-semibold text-gray-900 mt-2">
-          {product.name}
-        </h3>
+        <Link to={`/products/${product.id}`}>
+  <h3 className="text-lg font-semibold text-gray-900 mt-2 hover:text-blue-600 transition">
+    {product.name}
+  </h3>
+</Link>
 
         {/* Rating */}
         <div className="flex items-center gap-2 mt-3">
