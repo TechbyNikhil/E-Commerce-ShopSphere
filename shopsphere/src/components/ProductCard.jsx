@@ -1,8 +1,17 @@
 import { useCart } from "../context/CartContext";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import { Heart, ShoppingCart, Star, Minus, Plus } from "lucide-react";
 
 function ProductCard({ product }) {
-  const { addToCart } = useCart();
+  const {
+  cart,
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+} = useCart();
+
+const cartItem = cart.find((item) => item.id === product.id);
+
+const quantity = cartItem ? cartItem.quantity : 0;
   const discount = Math.round(
     ((product.originalPrice - product.price) /
       product.originalPrice) *
@@ -71,14 +80,45 @@ function ProductCard({ product }) {
         </div>
 
         {/* Add to Cart */}
-        <button
-  type="button"
-  onClick={() => addToCart(product)}
-  className="w-full mt-5 flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
->
-  <ShoppingCart size={19} />
-  Add to Cart
-</button>
+        {/* Add to Cart / Quantity Controls */}
+<div className="mt-5">
+  {quantity === 0 ? (
+    <button
+      type="button"
+      onClick={() => addToCart(product)}
+      className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
+    >
+      <ShoppingCart size={20} />
+      Add to Cart
+    </button>
+  ) : (
+    <div className="w-full flex items-center justify-between bg-blue-50 border border-blue-200 rounded-xl p-1">
+
+      <button
+        type="button"
+        onClick={() => decreaseQuantity(product.id)}
+        className="bg-white text-blue-600 p-2 rounded-lg hover:bg-blue-100 transition"
+        aria-label="Decrease quantity"
+      >
+        <Minus size={20} />
+      </button>
+
+      <span className="text-lg font-bold text-blue-700">
+        {quantity}
+      </span>
+
+      <button
+        type="button"
+        onClick={() => increaseQuantity(product.id)}
+        className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+        aria-label="Increase quantity"
+      >
+        <Plus size={20} />
+      </button>
+
+    </div>
+  )}
+</div>
 
       </div>
 
