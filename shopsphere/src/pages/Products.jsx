@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SlidersHorizontal, X, Search } from "lucide-react";
+import {
+  SlidersHorizontal,
+  X,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import { products } from "../data/products";
 import ProductCard from "../components/ProductCard";
@@ -18,6 +24,10 @@ const categories = [
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
+  // Pagination
+const PRODUCTS_PER_PAGE = 12;
+
+const [currentPage, setCurrentPage] = useState(1);
 
   // Get filter values from URL
   const selectedCategory = searchParams.get("category") || "all";
@@ -110,7 +120,36 @@ function Products() {
     default:
       break;
   }
+// Total number of pages
+const totalPages = Math.ceil(
+  sortedProducts.length / PRODUCTS_PER_PAGE
+);
 
+// Calculate starting index
+const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+// Get products for current page
+const currentProducts = sortedProducts.slice(
+  startIndex,
+  startIndex + PRODUCTS_PER_PAGE
+);
+
+// Change page
+function changePage(page) {
+  if (page < 1 || page > totalPages) return;
+
+  setCurrentPage(page);
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+// Reset pagination when filters change
+useEffect(() => {
+  setCurrentPage(1);
+}, [searchParams]);
   // Check if any filters are active
   const hasActiveFilters =
     selectedCategory !== "all" ||
@@ -357,12 +396,12 @@ function Products() {
             {/* Product Grid */}
             {sortedProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {sortedProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                  />
-                ))}
+                {currentProducts.map((product) => (
+  <ProductCard
+    key={product.id}
+    product={product}
+  />
+))}
               </div>
             ) : (
               <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
@@ -390,6 +429,54 @@ function Products() {
 
               </div>
             )}
+            {/* Pagination */}
+{totalPages > 1 && (
+  <div className="flex flex-wrap items-center justify-center gap-2 mt-12">
+
+    {/* Previous Button */}
+    <button
+      type="button"
+      onClick={() => changePage(currentPage - 1)}
+      disabled={currentPage === 1}
+      className="flex items-center gap-1 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+    >
+      <ChevronLeft size={18} />
+      <span className="hidden sm:inline">Previous</span>
+    </button>
+
+    {/* Page Numbers */}
+    {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+      (page) => (
+        <button
+          key={page}
+          type="button"
+          onClick={() => changePage(page)}
+          aria-label={`Go to page ${page}`}
+          aria-current={currentPage === page ? "page" : undefined}
+          className={`w-10 h-10 rounded-lg font-semibold transition ${
+            currentPage === page
+              ? "bg-blue-600 text-white"
+              : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
+          }`}
+        >
+          {page}
+        </button>
+      )
+    )}
+
+    {/* Next Button */}
+    <button
+      type="button"
+      onClick={() => changePage(currentPage + 1)}
+      disabled={currentPage === totalPages}
+      className="flex items-center gap-1 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-blue-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+    >
+      <span className="hidden sm:inline">Next</span>
+      <ChevronRight size={18} />
+    </button>
+
+  </div>
+)}
 
           </section>
         </div>
